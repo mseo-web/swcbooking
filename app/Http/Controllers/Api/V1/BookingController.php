@@ -7,54 +7,42 @@ use App\Models\Booking;
 use App\Http\Requests\StoreBookingRequest;
 use App\Http\Requests\UpdateBookingRequest;
 use App\Http\Resources\BookingResource;
+use App\Services\BookingService;
 
 class BookingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $bookingService;
+
+    public function __construct(BookingService $bookingService)
+    {
+        $this->bookingService = $bookingService;
+    }
+
     public function index()
     {
-        // Возвращает список всех бронирований
-        return BookingResource::collection(Booking::with('resource')->get());
+        return BookingResource::collection($this->bookingService->getAllBookings());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreBookingRequest $request)
     {
-        // Создаёт новое бронирование
-        $booking = Booking::create($request->validated());
-        return response()->json($booking, 201);
+        $booking = $this->bookingService->createBooking($request->validated());
+        return response()->json(new BookingResource($booking), 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Booking $booking)
+    public function show($id)
     {
-        // Возвращает данные конкретного бронирования
-        return new BookingResource($booking->load('resource'));
+        return new BookingResource($this->bookingService->getBooking($id));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateBookingRequest $request, Booking $booking)
+    public function update(UpdateBookingRequest $request, $id)
     {
-        // Обновляет бронирование
-        $booking->update($request->validated());
-        return response()->json($booking);
+        $booking = $this->bookingService->updateBooking($id, $request->validated());
+        return new BookingResource($booking);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Booking $booking)
+    public function destroy($id)
     {
-        // Удаляет бронирование
-        $booking->delete();
+        $this->bookingService->deleteBooking($id);
         return response()->json(['message' => 'Booking deleted']);
     }
 }
