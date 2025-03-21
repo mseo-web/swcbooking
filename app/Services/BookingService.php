@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Repositories\Interfaces\BookingRepositoryInterface;
+use App\Events\BookingCreated;
+use App\Events\BookingCancelled;
 
 class BookingService
 {
@@ -20,24 +22,16 @@ class BookingService
 
     public function createBooking(array $data)
     {
-        // Здесь можно добавить дополнительную бизнес-логику
-        // Например, проверку доступности ресурса
-        return $this->repository->create($data);
-    }
-
-    public function getBooking($id)
-    {
-        return $this->repository->findWithResource($id);
-    }
-
-    public function updateBooking($id, array $data)
-    {
-        // Здесь можно добавить проверку конфликтов бронирования
-        return $this->repository->update($id, $data);
+        $booking = $this->repository->create($data);
+        event(new BookingCreated($booking));
+        return $booking;
     }
 
     public function deleteBooking($id)
     {
-        return $this->repository->delete($id);
+        $booking = $this->repository->find($id);
+        $this->repository->delete($id);
+        event(new BookingCancelled($booking));
+        return true;
     }
 }
