@@ -1,0 +1,870 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "SWC Booking API Documentation",
+        "description": "API documentation for SWC Booking System",
+        "contact": {
+            "email": "admin@example.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api/v1",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Регистрация нового пользователя",
+                "operationId": "e6d1fcf1feab4f92eacb72353c6dfbcd",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Пользователь успешно зарегистрирован",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Вход пользователя",
+                "operationId": "72bf786ad8ff53c7391309c836350a8d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Успешный вход",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неверные учетные данные",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Wrong email or password"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Выход пользователя",
+                "operationId": "03c724249ebb5241efa2455eaeaf8675",
+                "responses": {
+                    "200": {
+                        "description": "Успешный выход",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Token removed"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/bookings": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Получить список всех бронирований",
+                "operationId": "c700ae240419bd8c3e4383d1de6c228e",
+                "responses": {
+                    "200": {
+                        "description": "Успешная операция",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Booking"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Создать новое бронирование",
+                "operationId": "370f7a442431caac3f3d940cee5cad2a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreBookingRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Бронирование успешно создано",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Booking"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/bookings/{id}": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Получить конкретное бронирование",
+                "operationId": "6a8d98e14bc6c402f6ff907da0a0a78e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID бронирования",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешная операция",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Booking"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Бронирование не найдено"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Обновить существующее бронирование",
+                "operationId": "aa2cd270032f3d408f1afd6113aa6a57",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID бронирования",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreBookingRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Бронирование успешно обновлено",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Booking"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Бронирование не найдено"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Удалить бронирование",
+                "operationId": "1b57d2c724e2fe3f58f404de150f30f0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID бронирования",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Бронирование успешно удалено",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Booking deleted"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Бронирование не найдено"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/resources": {
+            "get": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Получить список ресурсов",
+                "operationId": "5aa6d24da6d357cde4d5e877db426dcd",
+                "responses": {
+                    "200": {
+                        "description": "Успешная операция",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Resource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Создать новый ресурс",
+                "operationId": "b84c4d5ab734d3249c3ed01d0f8c1b93",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreResourceRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Ресурс успешно создан",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Resource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/resources/{id}": {
+            "get": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Получить конкретный ресурс",
+                "operationId": "ef8a81f56ae91ff725bd5082ad7da059",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID ресурса",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешная операция",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Resource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Ресурс не найден"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Обновить существующий ресурс",
+                "operationId": "2739f54a08ea31fa5e31d9d5d51dad0b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID ресурса",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreResourceRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ресурс успешно обновлен",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Resource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Ресурс не найден"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Удалить ресурс",
+                "operationId": "ea2bfb422fdb68b43cac337415c51c59",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID ресурса",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ресурс успешно удален",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Resource deleted"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Ресурс не найден"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/resources/{id}/bookings": {
+            "get": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Получить бронирования ресурса",
+                "operationId": "90cb0ae7d4126042dad7a7ef09f7d3e7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID ресурса",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешная операция",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Booking"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Ресурс не найден"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Booking": {
+                "title": "Booking",
+                "description": "Booking model",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID of the booking",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "resource_id": {
+                        "title": "Resource ID",
+                        "description": "ID of the booked resource",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "title": "User ID",
+                        "description": "ID of the user who made the booking",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "start_time": {
+                        "title": "Start Time",
+                        "description": "Start time of the booking",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2025-03-20 10:00:00"
+                    },
+                    "end_time": {
+                        "title": "End Time",
+                        "description": "End time of the booking",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2025-03-20 11:00:00"
+                    },
+                    "created_at": {
+                        "title": "Created at",
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2025-03-20 10:00:00"
+                    },
+                    "updated_at": {
+                        "title": "Updated at",
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2025-03-20 10:00:00"
+                    }
+                },
+                "type": "object"
+            },
+            "Resource": {
+                "title": "Resource",
+                "description": "Resource model",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID of the resource",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "name": {
+                        "title": "Name",
+                        "description": "Name of the resource",
+                        "type": "string",
+                        "example": "Meeting Room A"
+                    },
+                    "type": {
+                        "title": "Type",
+                        "description": "Type of the resource",
+                        "type": "string",
+                        "example": "room"
+                    },
+                    "description": {
+                        "title": "Description",
+                        "description": "Description of the resource",
+                        "type": "string",
+                        "example": "Large meeting room with projector"
+                    },
+                    "created_at": {
+                        "title": "Created at",
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2025-03-20 10:00:00"
+                    },
+                    "updated_at": {
+                        "title": "Updated at",
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2025-03-20 10:00:00"
+                    }
+                },
+                "type": "object"
+            },
+            "LoginRequest": {
+                "title": "Login Request",
+                "description": "Login request body data",
+                "properties": {
+                    "email": {
+                        "title": "Email",
+                        "description": "User email",
+                        "type": "string",
+                        "format": "email",
+                        "example": "user@example.com"
+                    },
+                    "password": {
+                        "title": "Password",
+                        "description": "User password",
+                        "type": "string",
+                        "format": "password",
+                        "example": "password123"
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterRequest": {
+                "title": "Register Request",
+                "description": "Register request body data",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "description": "User name",
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "title": "Email",
+                        "description": "User email",
+                        "type": "string",
+                        "format": "email",
+                        "example": "user@example.com"
+                    },
+                    "password": {
+                        "title": "Password",
+                        "description": "User password",
+                        "type": "string",
+                        "format": "password",
+                        "example": "password123"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreBookingRequest": {
+                "title": "Store Booking Request",
+                "description": "Booking request body data",
+                "properties": {
+                    "resource_id": {
+                        "title": "Resource ID",
+                        "description": "ID of the resource to book",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "title": "User ID",
+                        "description": "ID of the user making the booking",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "start_time": {
+                        "title": "Start Time",
+                        "description": "Start time of the booking",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2025-03-20 10:00:00"
+                    },
+                    "end_time": {
+                        "title": "End Time",
+                        "description": "End time of the booking",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2025-03-20 11:00:00"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreResourceRequest": {
+                "title": "Store Resource Request",
+                "description": "Store Resource request body data",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "description": "Name of the resource",
+                        "type": "string",
+                        "example": "Meeting Room A"
+                    },
+                    "type": {
+                        "title": "Type",
+                        "description": "Type of the resource",
+                        "type": "string",
+                        "example": "room"
+                    },
+                    "description": {
+                        "title": "Description",
+                        "description": "Description of the resource",
+                        "type": "string",
+                        "example": "Large meeting room with projector",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "AuthResponse": {
+                "title": "Authentication Response",
+                "description": "Authentication response with user data and token",
+                "properties": {
+                    "user": {
+                        "title": "User",
+                        "description": "User object",
+                        "type": "object"
+                    },
+                    "token": {
+                        "title": "Token",
+                        "description": "Bearer token for API authentication",
+                        "type": "string",
+                        "example": "1|abcdef123456..."
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "description": "Используйте Bearer токен для аутентификации",
+                "name": "Bearer Authentication",
+                "in": "header",
+                "bearerFormat": "sanctum",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "API Endpoints для аутентификации пользователей"
+        },
+        {
+            "name": "Bookings",
+            "description": "API Endpoints для управления бронированиями"
+        },
+        {
+            "name": "Resources",
+            "description": "API Endpoints для управления ресурсами"
+        }
+    ]
+}

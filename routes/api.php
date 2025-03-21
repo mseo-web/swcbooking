@@ -7,6 +7,11 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\ResourceController;
 use App\Http\Controllers\Api\V1\BookingController;
 
+// API Documentation route
+Route::get('docs', function() {
+    return redirect('/api/documentation');
+})->name('swagger.docs');
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');

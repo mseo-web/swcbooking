@@ -27,6 +27,16 @@ class BookingService
         return $booking;
     }
 
+    public function getBooking($id)
+    {
+        return $this->repository->findWithResource($id);
+    }
+
+    public function updateBooking($id, array $data)
+    {
+        return $this->repository->update($id, $data);
+    }
+
     public function deleteBooking($id)
     {
         $booking = $this->repository->find($id);

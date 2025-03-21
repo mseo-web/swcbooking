@@ -117,7 +117,7 @@
                             </span>
                             <span>
                                 Документация Swagger
-                                <a href="https://smartexweb.kz/" target="_blank" class="inline-flex items-center space-x-1 font-medium underline underline-offset-4 text-[#f53003] dark:text-[#FF4433] ml-1" target="_blank">
+                                <a href="{{ route('swagger.docs') }}" target="_blank" class="inline-flex items-center space-x-1 font-medium underline underline-offset-4 text-[#f53003] dark:text-[#FF4433] ml-1" target="_blank">
                                     <span>Перейти</span>
                                     <svg
                                         width="10"
